@@ -50,8 +50,6 @@ public class StreamingWithSideOutputExample {
         // set up the execution environment
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime);
-
         // make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);
 

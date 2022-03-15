@@ -1,4 +1,4 @@
-package com.apple.chapter05;
+package com.apple.source;
 import com.apple.bean.Event;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

@@ -9,7 +9,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
 public class StreamWordCount {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         ParameterTool parameterTool = ParameterTool.fromArgs(args);
         String jobName = parameterTool.get("jobName"); //提交脚本中需要显示指定--jobname dwd-LogBaseApp
 
@@ -24,12 +24,16 @@ public class StreamWordCount {
         DataStreamSource<String> lineStream = env.socketTextStream("localhost", 7777);
 
         // 3. 分词转换并分组统计
-        SingleOutputStreamOperator<Tuple2<String, Long>> sum = lineStream.flatMap((String line, Collector<Tuple2<String, Long>> out) -> {
-            String[] words = line.split(" ");
-            for (String word : words) {
-                out.collect(Tuple2.of(word, 1L));
-            }
-        }).name("").uid("").returns(Types.TUPLE(Types.STRING, Types.LONG))
+        SingleOutputStreamOperator<Tuple2<String, Long>> sum = lineStream
+                .flatMap((String line, Collector<Tuple2<String, Long>> out) -> {
+                    String[] words = line.split(" ");
+                    for (String word : words) {
+                        out.collect(Tuple2.of(word, 1L));
+                    }
+                })
+                .name("")
+                .uid("")
+                .returns(Types.TUPLE(Types.STRING, Types.LONG))
                 .keyBy(data -> data.f0)
                 .sum(1);
 

@@ -1,4 +1,4 @@
-package com.apple.chapter05;
+package com.apple.types;
 
 import com.apple.bean.Event;
 import org.apache.flink.api.common.typeinfo.TypeHint;

@@ -1,4 +1,4 @@
-package com.apple.chapter05;
+package com.apple.source;
 
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -20,7 +20,7 @@ public class SourceKafkaTest {
         DataStreamSource<String> stream;
         stream = env.addSource(new FlinkKafkaConsumer<>("clicks", new SimpleStringSchema(), properties));
 
-        stream.print("kafka source");
+        stream.print("kafka source: ");
 
         env.execute();
     }

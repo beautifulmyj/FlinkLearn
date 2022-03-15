@@ -1,4 +1,4 @@
-package com.apple.chapter05;
+package com.apple.transform;
 
 import com.apple.bean.Event;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -26,12 +26,13 @@ public class TransformMapTest {
         result2.print("2");
 
         // 3. 使用匿名类实现MapFunction接口
-        SingleOutputStreamOperator<String> result3 = stream.map(new MapFunction<Event, String>() {
-            @Override
-            public String map(Event value) throws Exception {
-                return value.user;
-            }
-        });
+        SingleOutputStreamOperator<String> result3 = stream
+                .map(new MapFunction<Event, String>() {
+                    @Override
+                    public String map(Event value) throws Exception {
+                        return value.user;
+                    }
+                });
 
         result3.print("3");
 

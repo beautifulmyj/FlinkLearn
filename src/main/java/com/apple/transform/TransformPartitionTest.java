@@ -1,4 +1,4 @@
-package com.apple.chapter05;
+package com.apple.transform;
 import com.apple.bean.Event;
 import com.apple.sources.ClickSource;
 import org.apache.flink.streaming.api.datastream.DataStream;

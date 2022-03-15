@@ -1,18 +1,15 @@
-package com.apple.chapter05;
-
+package com.apple.sink;
 import com.apple.bean.Event;
-import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringEncoder;
-import org.apache.flink.core.fs.Path;
+import org.apache.flink.connector.jdbc.JdbcConnectionOptions;
+import org.apache.flink.connector.jdbc.JdbcSink;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
 
 /**
  * @author atguigu-mqx
  */
-public class SinkToFileTest {
-    public static void main(String[] args) throws Exception{
+public class SinkToMysql {
+    public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(4);
 
@@ -26,17 +23,19 @@ public class SinkToFileTest {
                 new Event("Bob", "./prod?id=1", 2300L),
                 new Event("Bob", "./prod?id=3", 3300L));
 
-        StreamingFileSink<String> fileSink = StreamingFileSink
-                .<String>forRowFormat(new Path("./output"),
-                        new SimpleStringEncoder<>("UTF-8"))
-                .build();
-
-        stream.map(new MapFunction<Event, String>() {
-            @Override
-            public String map(Event value) throws Exception {
-                return value.toString();
-            }
-        }).addSink(fileSink);
+        stream.addSink(JdbcSink.sink(
+                "INSERT INTO clicks (user, url) VALUES (?, ?)",
+                (statement, event) -> {
+                    statement.setString(1, event.user);
+                    statement.setString(2, event.url);
+                },
+                new JdbcConnectionOptions.JdbcConnectionOptionsBuilder()
+                        .withUrl("jdbc:mysql://localhost:3306/playground?useSSL=false")
+                        .withDriverName("com.mysql.jdbc.Driver")
+                        .withUsername("root")
+                        .withPassword("lovely0620")
+                        .build()
+        ));
 
         env.execute();
     }
